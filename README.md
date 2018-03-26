@@ -1,7 +1,7 @@
 # imu_conversion
-From NED(the imu of Pixhawk) to ENU
+From NED (the imu on Pixhawk) to ENU
 ## Running the node
-These instructions will let the imu data which is in NED to convert to ENU.
+These instructions will let the imu data which is in NED convert to ENU.
 ```
 rosrun imu_conversion NEDtoENU
 ```

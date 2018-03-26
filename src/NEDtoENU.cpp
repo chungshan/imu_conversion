@@ -33,6 +33,8 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "NEDtoENU");
   ros::NodeHandle nh;
 
+  /* The topic which is needed to be subscribed depends on what imu you use, here we use the imu on Pixhawk. */
+
   ros::Subscriber imu_sub = nh.subscribe<sensor_msgs::Imu>("/mavros/imu/data", 10, imu_cb);
   ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("/imu/enu",10);
 

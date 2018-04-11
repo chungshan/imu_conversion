@@ -136,11 +136,13 @@ int main(int argc, char **argv)
   svo_pose_old.z = 0;
 
   imu_ENU.header.frame_id = "base_link";
+  svo_twist.header.frame_id = "base_link";
 
 
 
   while (ros::ok()) {
    imu_ENU.header.stamp = ros::Time::now();
+   svo_twist.header.stamp = ros::Time::now();
    NEDtoENU(imu_NED, &imu_ENU);
    imu_pub.publish(imu_ENU);
    svo_poseTotwist(svo_pose, &svo_twist, imu_NED);

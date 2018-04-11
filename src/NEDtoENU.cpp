@@ -125,11 +125,12 @@ int main(int argc, char **argv)
 
   /* The topic which is needed to be subscribed depends on what imu you use, here we use the imu on Pixhawk. */
 
-  ros::Subscriber imu_sub = nh.subscribe<sensor_msgs::Imu>("/mavros/imu/data", 10, imu_cb);
+  ros::Subscriber imu_sub = nh.subscribe<sensor_msgs::Imu>("/drone2/mavros/imu/data", 10, imu_cb);
   ros::Subscriber svo_sub = nh.subscribe<geometry_msgs::PoseWithCovarianceStamped>("/svo/pose_imu", 10, svo_cb);
   ros::Subscriber filter_sub = nh.subscribe<nav_msgs::Odometry>("/odometry/filtered", 10, filter_cb);
   ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("/imu/enu",10);
   ros::Publisher svo_twist_pub = nh.advertise<geometry_msgs::TwistWithCovarianceStamped>("/svo/twist", 10);
+  ros::Publisher svo_pub = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("/svo/pose_imu2", 10);
   ros::Rate rate(50);
   svo_pose_old.x = 0;
   svo_pose_old.y = 0;
@@ -137,6 +138,8 @@ int main(int argc, char **argv)
 
   imu_ENU.header.frame_id = "base_link";
   svo_twist.header.frame_id = "base_link";
+  svo_pose.header.frame_id = "odom";
+
 
 
 
@@ -147,10 +150,12 @@ int main(int argc, char **argv)
    imu_pub.publish(imu_ENU);
    svo_poseTotwist(svo_pose, &svo_twist, imu_NED);
    svo_twist_pub.publish(svo_twist);
+   svo_pub.publish(svo_pose);
    ROS_INFO("SVO:    x = %f, y = %f, z = %f",svo_pose.pose.pose.position.x, svo_pose.pose.pose.position.y, svo_pose.pose.pose.position.z);
    ROS_INFO("Filter: x = %f, y = %f, z = %f", filter_pose.pose.pose.position.x, filter_pose.pose.pose.position.y, filter_pose.pose.pose.position.z);
    ros::spinOnce();
    rate.sleep();
+
   }
   return 0;
 

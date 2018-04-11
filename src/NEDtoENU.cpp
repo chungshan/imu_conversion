@@ -52,7 +52,7 @@ void NEDtoENU(const sensor_msgs::Imu NED, sensor_msgs::Imu *imu_ENU){
 pose_old svo_pose_old;
 void svo_poseTotwist(const geometry_msgs::PoseWithCovarianceStamped pose, geometry_msgs::TwistWithCovarianceStamped *twist, const sensor_msgs::Imu imu){
 
-  float dt = 1/50;
+  float dt = 0.02;
   float vx,vy,vz;
   tf::Quaternion quat(imu.orientation.x, imu.orientation.y, imu.orientation.z, imu.orientation.w);
 
@@ -64,7 +64,7 @@ void svo_poseTotwist(const geometry_msgs::PoseWithCovarianceStamped pose, geomet
   rpy.x = roll;
   rpy.y = pitch;
   rpy.z = yaw;
-  ROS_INFO("roll = %f",roll);
+  //ROS_INFO("roll = %f",roll);
   Eigen::Matrix3f Rx, Ry, Rz;
 
   Rx(0,0) = 1;
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
   ros::Subscriber svo_sub = nh.subscribe<geometry_msgs::PoseWithCovarianceStamped>("/svo/pose_imu", 10, svo_cb);
   ros::Subscriber filter_sub = nh.subscribe<nav_msgs::Odometry>("/odometry/filtered", 10, filter_cb);
   ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("/imu/enu",10);
-
+  ros::Publisher svo_twist_pub = nh.advertise<geometry_msgs::TwistWithCovarianceStamped>("/svo/twist", 10);
   ros::Rate rate(50);
   svo_pose_old.x = 0;
   svo_pose_old.y = 0;
@@ -142,6 +142,7 @@ int main(int argc, char **argv)
    NEDtoENU(imu_NED, &imu_ENU);
    imu_pub.publish(imu_ENU);
    svo_poseTotwist(svo_pose, &svo_twist, imu_NED);
+   svo_twist_pub.publish(svo_twist);
    ROS_INFO("SVO:    x = %f, y = %f, z = %f",svo_pose.pose.pose.position.x, svo_pose.pose.pose.position.y, svo_pose.pose.pose.position.z);
    ROS_INFO("Filter: x = %f, y = %f, z = %f", filter_pose.pose.pose.position.x, filter_pose.pose.pose.position.y, filter_pose.pose.pose.position.z);
    ros::spinOnce();

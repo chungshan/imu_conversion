@@ -96,9 +96,9 @@ void svo_poseTotwist(const geometry_msgs::PoseWithCovarianceStamped pose, geomet
   Rz(2,1) = 0;
   Rz(2,2) = 1;
 
-  vx = (pose.pose.pose.position.x - svo_pose_old.x);
-  vy = (pose.pose.pose.position.y - svo_pose_old.y);
-  vz = (pose.pose.pose.position.z - svo_pose_old.z);
+  vx = (pose.pose.pose.position.x - svo_pose_old.x)/dt;
+  vy = (pose.pose.pose.position.y - svo_pose_old.y)/dt;
+  vz = (pose.pose.pose.position.z - svo_pose_old.z)/dt;
   svo_pose_old.x = pose.pose.pose.position.x;
   svo_pose_old.y = pose.pose.pose.position.y;
   svo_pose_old.z = pose.pose.pose.position.z;
@@ -113,6 +113,7 @@ void svo_poseTotwist(const geometry_msgs::PoseWithCovarianceStamped pose, geomet
   twist->twist.twist.linear.x = v_after(0);
   twist->twist.twist.linear.y = v_after(1);
   twist->twist.twist.linear.z = v_after(2);
+  ROS_INFO("SVO_Vx:x = %f, y = %f, z = %f.",twist->twist.twist.linear.x,twist->twist.twist.linear.y, twist->twist.twist.linear.z);
 }
 
 int main(int argc, char **argv)
@@ -128,6 +129,9 @@ int main(int argc, char **argv)
   ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("/imu/enu",10);
 
   ros::Rate rate(50);
+  svo_pose_old.x = 0;
+  svo_pose_old.y = 0;
+  svo_pose_old.z = 0;
 
   imu_ENU.header.frame_id = "base_link";
 

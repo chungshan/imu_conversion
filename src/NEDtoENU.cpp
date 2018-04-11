@@ -152,7 +152,7 @@ int main(int argc, char **argv)
    svo_twist_pub.publish(svo_twist);
    svo_pub.publish(svo_pose);
    ROS_INFO("SVO:    x = %f, y = %f, z = %f",svo_pose.pose.pose.position.x, svo_pose.pose.pose.position.y, svo_pose.pose.pose.position.z);
-   ROS_INFO("Filter: x = %f, y = %f, z = %f", filter_pose.pose.pose.position.x, filter_pose.pose.pose.position.y, filter_pose.pose.pose.position.z);
+   ROS_INFO("Filter: x = %f, y = %f, z = %f", filter_pose.twist.twist.linear.x, filter_pose.twist.twist.linear.y, filter_pose.twist.twist.linear.z);
    ros::spinOnce();
    rate.sleep();
 

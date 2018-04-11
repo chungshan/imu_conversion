@@ -55,6 +55,7 @@ void svo_poseTotwist(const geometry_msgs::PoseWithCovarianceStamped pose, geomet
   float dt = 0.02;
   float vx,vy,vz;
   tf::Quaternion quat(imu.orientation.x, imu.orientation.y, imu.orientation.z, imu.orientation.w);
+  twist->twist.covariance = pose.pose.covariance;
 
 
   double roll, pitch, yaw;
@@ -135,6 +136,7 @@ int main(int argc, char **argv)
   svo_pose_old.z = 0;
 
   imu_ENU.header.frame_id = "base_link";
+
 
 
   while (ros::ok()) {

@@ -64,6 +64,7 @@ void svo_poseTotwist(const geometry_msgs::PoseWithCovarianceStamped pose, geomet
   rpy.x = roll;
   rpy.y = pitch;
   rpy.z = yaw;
+  ROS_INFO("roll = %f",roll);
   Eigen::Matrix3f Rx, Ry, Rz;
 
   Rx(0,0) = 1;
